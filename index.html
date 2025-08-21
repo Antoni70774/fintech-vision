@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinTech Vision</title>
-    <meta name="description" content="Seu assistente financeiro pessoal com um design futurista.">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="Seu assistente financeiro pessoal">
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1B1B2F">
-    <link rel="apple-touch-icon" href="app-icon.png">
+    <link rel="apple-touch-icon" href="assets/icons/app-icon.png">
 </head>
 <body>
 
@@ -74,13 +72,32 @@
                 <div class="form-group" id="category-group">
                     <label for="category">Categoria</label>
                     <select id="category">
-                        <option value="Alimentação">Alimentação</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Lazer">Lazer</option>
-                        <option value="Moradia">Moradia</option>
-                        <option value="Salário">Salário</option>
-                        <option value="Freelas">Freelas</option>
-                        <option value="Outros">Outros</option>
+                        <!-- Despesas Essenciais -->
+                        <optgroup label="Despesas Essenciais">
+                            <option value="Moradia">Moradia/Aluguel</option>
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Água">Água</option>
+                            <option value="Energia">Energia</option>
+                            <option value="Internet">Internet</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                        </optgroup>
+                        <!-- Despesas Variáveis -->
+                        <optgroup label="Despesas Variáveis">
+                            <option value="Lazer">Lazer</option>
+                            <option value="Vestuário">Vestuário</option>
+                            <option value="Presentes">Presentes</option>
+                            <option value="Viagens">Viagens</option>
+                            <option value="Academia">Academia</option>
+                        </optgroup>
+                        <!-- Receitas -->
+                        <optgroup label="Receitas">
+                            <option value="Salário">Salário</option>
+                            <option value="Aluguel">Aluguel</option>
+                            <option value="Investimentos">Investimentos</option>
+                            <option value="Outros">Outros</option>
+                        </optgroup>
                     </select>
                 </div>
                  <div class="form-group">
@@ -92,23 +109,8 @@
         </div>
     </div>
     
-    <script type="importmap">
-    {
-        "imports": {
-            "chart.js": "https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.js"
-        }
-    }
-    </script>
-    <script type="module" src="script.js"></script>
+    <!-- Modificar a parte dos scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/script.js"></script>
 </body>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service Worker registrado!', reg))
-        .catch(err => console.error('Erro ao registrar o Service Worker:', err));
-    });
-  }
-</script>
-
 </html>
