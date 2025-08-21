@@ -1,0 +1,17 @@
+{
+  "name": "FinTech Vision",
+  "short_name": "FinTech",
+  "description": "Seu assistente financeiro pessoal com um design futurista.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0F0F1B",
+  "theme_color": "#1B1B2F",
+  "icons": [
+    {
+      "src": "app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
