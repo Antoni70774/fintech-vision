@@ -27,47 +27,17 @@ body {
 }
 
 .app-container {
-    max-width: 450px;
-    margin: 0 auto;
-    background-color: var(--surface-color);
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    position: relative;
-    padding-bottom: 70px; /* Space for bottom nav */
 }
 
-/* Header */
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.app-header h1 {
-    font-size: 24px;
-    font-weight: 500;
-}
-
-.profile-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--background-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-/* Main Content */
 #app-main {
-    padding: 20px;
-    flex-grow: 1;
+    flex: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem;
 }
 
 .page {
@@ -91,7 +61,7 @@ body {
     padding: 20px;
     border-radius: 16px;
     box-shadow: var(--shadow);
-    margin-bottom: 24px;
+    margin-bottom: 0.5rem;
 }
 .date-selector {
     display: flex;
@@ -120,7 +90,7 @@ body {
     padding: 20px;
     border-radius: 16px;
     box-shadow: var(--shadow);
-    margin-bottom: 24px;
+    margin: 0.5rem 0;
 }
 .chart-container h3 { margin-bottom: 16px; font-weight: 500; text-align: center; }
 
@@ -190,6 +160,7 @@ body {
     align-items: center;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     border-top: 1px solid var(--border-color);
+    margin-top: auto;
 }
 .nav-item {
     display: flex;
@@ -328,7 +299,7 @@ input[type="date"] { color: var(--text-secondary); }
     padding: 20px;
     border-radius: 16px;
     box-shadow: var(--shadow);
-    margin-bottom: 24px;
+    margin-bottom: 0.5rem;
 }
 .profile-card p { margin-bottom: 12px; }
 .profile-card p:last-child { margin-bottom: 0; }
@@ -367,7 +338,7 @@ input[type="date"] { color: var(--text-secondary); }
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
