@@ -1,156 +1,183 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinTech Vision</title>
-    <meta name="description" content="Seu assistente financeiro pessoal">
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Controle Financeiro</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1B1B2F">
-    <link rel="apple-touch-icon" href="assets/icons/app-icon.png">
+    <meta name="theme-color" content="#4A90E2">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>Visão Geral</h1>
+            <div class="profile-icon">
+                <span class="material-icons-sharp">person_outline</span>
+            </div>
+        </header>
 
-    <header class="modern-header">
-        <div class="header-content">
-            <h1><i class="fas fa-wallet"></i> FinTech Vision</h1>
-            <button id="install-btn" class="install-btn">
-                <i class="fas fa-download"></i> Instalar App
-            </button>
-        </div>
-    </header>
+        <!-- Main Content -->
+        <main id="app-main">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <div class="summary-card">
+                    <div class="date-selector">
+                        <span id="prev-month" class="material-icons-sharp">chevron_left</span>
+                        <h2 id="current-month-year"></h2>
+                        <span id="next-month" class="material-icons-sharp">chevron_right</span>
+                    </div>
+                    <div class="balance-info">
+                        <p>Balanço do Mês</p>
+                        <h3 id="month-balance">R$ 0,00</h3>
+                    </div>
+                    <div class="income-expense">
+                        <div class="income">
+                            <span class="material-icons-sharp up">arrow_upward</span>
+                            <div>
+                                <p>Receitas</p>
+                                <h4 id="month-income">R$ 0,00</h4>
+                            </div>
+                        </div>
+                        <div class="expense">
+                             <span class="material-icons-sharp down">arrow_downward</span>
+                            <div>
+                                <p>Despesas</p>
+                                <h4 id="month-expense">R$ 0,00</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <main>
-        <section id="dashboard">
-            <div class="card balance modern-card">
-                <i class="fas fa-chart-line card-icon"></i>
-                <div class="card-content">
-                    <h2>Saldo Atual</h2>
-                    <p id="balance-value">R$ 0,00</p>
+                <div class="chart-container">
+                    <h3>Despesas por Categoria</h3>
+                    <canvas id="expense-chart"></canvas>
+                </div>
+
+                <div class="recent-transactions">
+                    <h3>Transações Recentes</h3>
+                    <ul id="transaction-list">
+                        <!-- Transactions will be injected here by JS -->
+                    </ul>
                 </div>
             </div>
-            <div class="card income modern-card">
-                <i class="fas fa-arrow-up card-icon"></i>
-                <div class="card-content">
-                    <h3>Receitas</h3>
-                    <p id="income-value">R$ 0,00</p>
+
+            <!-- Goals Page -->
+            <div id="goals-page" class="page">
+                 <div class="goals-header">
+                    <h3>Metas Pessoais</h3>
+                    <button id="add-goal-btn" class="btn-primary">Nova Meta</button>
+                </div>
+                <div id="goals-list">
+                    <!-- Goals will be injected here by JS -->
                 </div>
             </div>
-            <div class="card expenses modern-card">
-                <i class="fas fa-arrow-down card-icon"></i>
-                <div class="card-content">
-                    <h3>Despesas</h3>
-                    <p id="expenses-value">R$ 0,00</p>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <h3>Perfil & Configurações</h3>
+                <div class="profile-card">
+                    <p><strong>Usuário Atual:</strong> <span id="current-user-name"></span></p>
+                    <div class="user-switcher">
+                        <p>Trocar de usuário:</p>
+                        <div class="user-buttons">
+                           <button class="btn-secondary" data-user="Esposo">Esposo</button>
+                           <button class="btn-secondary" data-user="Esposa">Esposa</button>
+                        </div>
+                    </div>
+                    <button id="export-data-btn" class="btn-secondary">Exportar Dados</button>
+                </div>
+                <div class="bank-connect">
+                    <h4>Conexão Bancária</h4>
+                    <p>Conecte suas contas para sincronizar transações automaticamente.</p>
+                    <button class="btn-disabled" disabled>Conectar (Em Breve)</button>
                 </div>
             </div>
-        </section>
 
-        <section id="chart-container">
-            <h2>Gastos por Categoria</h2>
-            <canvas id="category-chart"></canvas>
-        </section>
+        </main>
 
-        <section id="transactions">
-            <h2>Histórico de Transações</h2>
-            <ul id="transaction-list">
-                <!-- Transações serão inseridas aqui via JS -->
-            </ul>
-        </section>
-    </main>
+        <!-- Floating Action Button -->
+        <button id="add-transaction-btn" class="fab">
+            <span class="material-icons-sharp">add</span>
+        </button>
 
-    <button id="add-transaction-btn" class="fab">
-        <i class="fas fa-plus"></i>
-    </button>
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-page="dashboard-page">
+                <span class="material-icons-sharp">home</span>
+                <span class="nav-text">Início</span>
+            </a>
+            <a href="#" class="nav-item" data-page="goals-page">
+                <span class="material-icons-sharp">flag</span>
+                <span class="nav-text">Metas</span>
+            </a>
+            <a href="#" class="nav-item" data-page="profile-page">
+                <span class="material-icons-sharp">person</span>
+                <span class="nav-text">Perfil</span>
+            </a>
+        </nav>
+    </div>
 
-    <div id="modal" class="modal-overlay">
+    <!-- Add Transaction Modal -->
+    <div id="transaction-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-plus-circle"></i> Nova Transação</h2>
-                <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-            </div>
             <form id="transaction-form">
-                <div class="form-group">
-                    <label for="description">
-                        <i class="fas fa-font input-icon"></i>
-                        <span class="label-text">O que é isso?</span>
-                    </label>
-                    <input type="text" id="description" placeholder="Ex: Conta de luz, Salário, etc" required>
+                <h3>Nova Transação</h3>
+                <div class="toggle-type">
+                    <button type="button" id="type-expense-btn" class="toggle-btn active">Despesa</button>
+                    <button type="button" id="type-income-btn" class="toggle-btn">Receita</button>
                 </div>
+                <input type="hidden" id="transaction-type" value="expense">
                 
-                <div class="form-group">
-                    <label for="amount">
-                        <i class="fas fa-dollar-sign input-icon"></i>
-                        <span class="label-text">Qual o valor?</span>
-                    </label>
-                    <input type="number" id="amount" placeholder="R$ 0,00" step="0.01" required>
+                <label for="amount">Valor</label>
+                <input type="number" id="amount" placeholder="R$ 0,00" step="0.01" required>
+
+                <label for="description">Descrição</label>
+                <input type="text" id="description" placeholder="Ex: Almoço" required>
+                
+                <label for="category">Categoria</label>
+                <select id="category" required>
+                    <!-- Options will be populated by JS -->
+                </select>
+
+                <label for="date">Data</label>
+                <input type="date" id="date" required>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="type">
-                        <i class="fas fa-exchange-alt input-icon"></i>
-                        <span class="label-text">Tipo de operação</span>
-                    </label>
-                    <select id="type">
-                        <option value="income">➕ Receita (Entrada)</option>
-                        <option value="expense">➖ Despesa (Saída)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group" id="category-group">
-                    <label for="category">
-                        <i class="fas fa-tag input-icon"></i>
-                        <span class="label-text">Categoria</span>
-                    </label>
-                    <select id="category">
-                        <!-- Despesas Essenciais -->
-                        <optgroup label="Despesas Essenciais">
-                            <option value="Moradia">Moradia/Aluguel</option>
-                            <option value="Alimentação">Alimentação</option>
-                            <option value="Água">Água</option>
-                            <option value="Energia">Energia</option>
-                            <option value="Internet">Internet</option>
-                            <option value="Transporte">Transporte</option>
-                            <option value="Saúde">Saúde</option>
-                            <option value="Educação">Educação</option>
-                        </optgroup>
-                        <!-- Despesas Variáveis -->
-                        <optgroup label="Despesas Variáveis">
-                            <option value="Lazer">Lazer</option>
-                            <option value="Vestuário">Vestuário</option>
-                            <option value="Presentes">Presentes</option>
-                            <option value="Viagens">Viagens</option>
-                            <option value="Academia">Academia</option>
-                        </optgroup>
-                        <!-- Receitas -->
-                        <optgroup label="Receitas">
-                            <option value="Salário">Salário</option>
-                            <option value="Aluguel">Aluguel</option>
-                            <option value="Investimentos">Investimentos</option>
-                            <option value="Outros">Outros</option>
-                        </optgroup>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="date">
-                        <i class="fas fa-calendar input-icon"></i>
-                        <span class="label-text">Quando foi?</span>
-                    </label>
-                    <input type="date" id="date" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-check"></i> Salvar Transação
-                </button>
             </form>
         </div>
     </div>
     
-    <!-- Modificar a parte dos scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Add Goal Modal -->
+    <div id="goal-modal" class="modal-overlay">
+        <div class="modal-content">
+            <form id="goal-form">
+                <h3>Nova Meta Financeira</h3>
+                
+                <label for="goal-name">Nome da Meta</label>
+                <input type="text" id="goal-name" placeholder="Ex: Viagem para a Europa" required>
+
+                <label for="goal-target">Valor Alvo</label>
+                <input type="number" id="goal-target" placeholder="R$ 10.000,00" step="0.01" required>
+
+                <label for="goal-current">Valor Atual</label>
+                <input type="number" id="goal-current" placeholder="R$ 500,00" step="0.01" required>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-goal-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>
