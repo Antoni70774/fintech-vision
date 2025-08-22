@@ -158,7 +158,9 @@
     <div id="goal-modal" class="modal-overlay">
         <div class="modal-content">
             <form id="goal-form">
-                <h3>Nova Meta Financeira</h3>
+                <h3 id="goal-modal-title">Nova Meta Financeira</h3>
+                
+                <input type="hidden" id="goal-id">
                 
                 <label for="goal-name">Nome da Meta</label>
                 <input type="text" id="goal-name" placeholder="Ex: Viagem para a Europa" required>
@@ -172,6 +174,7 @@
                 <div class="modal-actions">
                     <button type="button" id="cancel-goal-btn" class="btn-secondary">Cancelar</button>
                     <button type="submit" class="btn-primary">Salvar Meta</button>
+                    <button type="button" id="delete-goal-btn" class="btn-danger" style="display: none;">Excluir</button>
                 </div>
             </form>
         </div>
@@ -179,5 +182,18 @@
 
 
     <script type="module" src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Falha ao registrar ServiceWorker:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
