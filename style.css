@@ -361,3 +361,31 @@ input[type="date"] { color: var(--text-secondary); }
 
 .bank-connect h4 { margin-bottom: 8px; font-weight: 500; }
 .bank-connect p { color: var(--text-secondary); margin-bottom: 16px; font-size: 14px; }
+
+.goal-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.edit-goal-btn {
+    background: none;
+    border: none;
+    color: #4A90E2;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
