@@ -1,11 +1,11 @@
 {
-  "name": "Controle Financeiro Casal",
+  "name": "Controle Financeiro",
   "short_name": "Finanças",
-  "description": "App de controle financeiro para casais.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#f4f6f8",
+  "background_color": "#ffffff",
   "theme_color": "#4A90E2",
+  "description": "App de controle financeiro pessoal",
   "icons": [
     {
       "src": "icon-192.png",
