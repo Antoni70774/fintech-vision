@@ -167,10 +167,10 @@
         </div>
     </div>
     
-    <!-- Add Goal Modal -->
+    <!-- Correção do formulário de meta -->
     <div id="goal-modal" class="modal-overlay">
         <div class="modal-content">
-            <form id="goal-form" onsubmit="handleGoalSubmit(event)">
+            <form id="goal-form">
                 <h3 id="goal-modal-title">Nova Meta Financeira</h3>
                 
                 <input type="hidden" id="goal-id">
@@ -184,13 +184,10 @@
                 <label for="goal-current">Valor Atual</label>
                 <input type="number" id="goal-current" step="0.01" required>
 
-                <label for="goal-date">Data Limite</label>
-                <input type="date" id="goal-date" required>
-
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeGoalModal()">Cancelar</button>
+                    <button type="button" onclick="closeGoalModal()" class="btn-secondary">Cancelar</button>
                     <button type="submit" class="btn-primary">Salvar</button>
-                    <button type="button" id="delete-goal-btn" class="btn-danger" onclick="deleteGoal()">Excluir</button>
+                    <button type="button" id="delete-goal-btn" class="btn-danger" style="display:none">Excluir</button>
                 </div>
             </form>
         </div>
