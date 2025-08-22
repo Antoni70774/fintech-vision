@@ -101,44 +101,94 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCategoryOptions(type);
     }
 
-    // Corrigido o formulário de transação
-    transactionForm.addEventListener('submit', (e) => {
+    // Correção do formulário de transação
+    transactionForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const newTransaction = {
-            id: Date.now().toString(),
-            user: state.currentUser,
-            type: transactionTypeInput.value,
-            amount: parseFloat(formData.get('amount')),
-            description: formData.get('description'),
-            category: formData.get('category'),
-            date: formData.get('date'),
-        };
+        const amount = document.getElementById('amount').value;
+        const description = document.getElementById('description').value;
+        const category = document.getElementById('category').value;
+        const date = document.getElementById('date').value;
         
-        if (!newTransaction.amount || !newTransaction.description || !newTransaction.date) {
+        if (!amount || !description || !category || !date) {
             alert('Por favor, preencha todos os campos');
             return;
         }
 
+        const newTransaction = {
+            id: Date.now().toString(),
+            user: state.currentUser,
+            type: transactionTypeInput.value,
+            amount: parseFloat(amount),
+            description: description,
+            category: category,
+            date: date
+        };
+
         state.transactions.push(newTransaction);
         saveAndRerender();
         closeModal(transactionModal);
-        e.target.reset();
+        this.reset();
     });
 
     // GOAL FORM
-    goalForm.addEventListener('submit', (e) => {
+    goalForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const newGoal = {
-            id: Date.now(),
-            name: document.getElementById('goal-name').value,
-            target: parseFloat(document.getElementById('goal-target').value),
-            current: parseFloat(document.getElementById('goal-current').value),
+        const goalId = document.getElementById('goal-id').value;
+        const name = document.getElementById('goal-name').value;
+        const target = document.getElementById('goal-target').value;
+        const current = document.getElementById('goal-current').value;
+        
+        if (!name || !target || !current) {
+            alert('Por favor, preencha todos os campos');
+            return;
+        }
+
+        const goalData = {
+            name: name,
+            target: parseFloat(target),
+            current: parseFloat(current)
         };
-        state.goals.push(newGoal);
+
+        if (goalId) {
+            const index = state.goals.findIndex(g => g.id === goalId);
+            if (index !== -1) {
+                state.goals[index] = { ...state.goals[index], ...goalData };
+            }
+        } else {
+            state.goals.push({
+                id: Date.now().toString(),
+                ...goalData
+            });
+        }
+
         saveAndRerender();
-        closeModal(goalModal);
+        closeGoalModal();
     });
+
+    // Correção da função de edição de meta
+    window.editGoal = function(goalId) {
+        const goal = state.goals.find(g => g.id === goalId);
+        if (!goal) return;
+
+        document.getElementById('goal-id').value = goal.id;
+        document.getElementById('goal-name').value = goal.name;
+        document.getElementById('goal-target').value = goal.target;
+        document.getElementById('goal-current').value = goal.current;
+        
+        document.getElementById('goal-modal-title').textContent = 'Editar Meta';
+        document.getElementById('delete-goal-btn').style.display = 'block';
+        
+        openModal(goalModal);
+    };
+
+    // Correção da função de fechar modal de meta
+    function closeGoalModal() {
+        closeModal(goalModal);
+        goalForm.reset();
+        document.getElementById('goal-id').value = '';
+        document.getElementById('goal-modal-title').textContent = 'Nova Meta Financeira';
+        document.getElementById('delete-goal-btn').style.display = 'none';
+    }
 
     // USER MANAGEMENT
     userButtons.forEach(button => {
@@ -244,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Corrigido sistema de metas
+    // Correção do sistema de metas
     function handleGoalSubmit(e) {
         e.preventDefault();
         const goalId = document.getElementById('goal-id').value;
@@ -315,34 +365,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Adicionado sistema de conexão bancária
-    async function connectBank(bankName) {
+    // Correção da integração bancária
+    window.connectBank = async function(bankName) {
         try {
-            const bankConfig = {
-                nubank: 'https://api.nubank.com.br',
-                itau: 'https://api.itau.com.br',
-                caixa: 'https://api.caixa.gov.br'
-            };
-
-            const response = await fetch(`${bankConfig[bankName]}/oauth`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    client_id: 'seu_client_id',
-                    redirect_uri: window.location.origin + '/callback'
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Falha na conexão');
-            }
-
-            alert(`Conexão com ${bankName} iniciada. Aguarde redirecionamento.`);
+            alert(`Integração com ${bankName} em desenvolvimento. Em breve estará disponível.`);
+            // Aqui você implementará a integração real quando tiver as credenciais
         } catch (error) {
-            alert(`No momento não é possível conectar ao ${bankName}. Tente novamente mais tarde.`);
             console.error('Erro na conexão:', error);
+            alert(`Não foi possível conectar ao ${bankName}. Tente novamente mais tarde.`);
         }
     }
 });
