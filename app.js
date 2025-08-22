@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     users: ['Esposo', 'Esposa'],
     currentDate: new Date(),
     expenseCategories: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Outros'],
-    incomeCategories: ['Salário', 'Freelance', 'Investimentos', 'Outros'],
+    incomeCategories: ['Salário', 'Freelance', 'Investimentos', 'Outros'], // ✅ revisado
   };
 
-  // UI
+  // UI Elements
   const navItems = document.querySelectorAll('.nav-item');
   const addTransactionBtn = document.getElementById('add-transaction-btn');
   const transactionModal = document.getElementById('transaction-modal');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateAll();
   registerServiceWorker();
 
-  // DATE NAV
+  // DATE NAVIGATION
   document.getElementById('prev-month').addEventListener('click', () => changeMonth(-1));
   document.getElementById('next-month').addEventListener('click', () => changeMonth(1));
 
@@ -46,12 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
     state.currentDate.setMonth(state.currentDate.getMonth() + direction);
     updateAll();
   }
+
   function setCurrentDate() {
     const today = new Date();
     document.getElementById('date').value = today.toISOString().split('T')[0];
   }
 
-  // NAV
+  // NAVIGATION
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -93,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // TYPE TOGGLE
   typeExpenseBtn.addEventListener('click', () => setTransactionType('expense'));
   typeIncomeBtn.addEventListener('click', () => setTransactionType('income'));
+
   function setTransactionType(type) {
     transactionTypeInput.value = type;
     typeExpenseBtn.classList.toggle('active', type === 'expense');
@@ -160,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // EDIT GOAL (exposta no window para ser usada no HTML criado dinamicamente)
+  // EDIT GOAL
   window.editGoal = function(goalId) {
     const goal = state.goals.find(g => g.id === goalId);
     if (!goal) return;
@@ -302,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userButtons.forEach(b => b.classList.toggle('active', b.dataset.user === state.currentUser));
   }
 
-  // Service Worker (único)
+  // SERVICE WORKER
   function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -313,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Integração bancária (stub)
+  // BANK INTEGRATION (stub)
   window.connectBank = async function(bankName) {
     try {
       alert(`Integração com ${bankName} em desenvolvimento. Em breve estará disponível.`);
