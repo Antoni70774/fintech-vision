@@ -238,34 +238,96 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    function renderGoals() {
-        const goalsListEl = document.getElementById('goals-list');
-        goalsListEl.innerHTML = '';
-        
-        if (state.goals.length === 0) {
-            goalsListEl.innerHTML = '<p>Você ainda não tem nenhuma meta. Adicione uma!</p>';
-            return;
-        }
+    function editGoal(goalId) {
+        const goal = state.goals.find(g => g.id === goalId);
+        if (!goal) return;
 
+        // Preenche o modal com os dados da meta
+        document.getElementById('goal-id').value = goal.id;
+        document.getElementById('goal-name').value = goal.name;
+        document.getElementById('goal-target').value = goal.target;
+        document.getElementById('goal-current').value = goal.current;
+        
+        // Atualiza título e mostra botão de deletar
+        document.getElementById('goal-modal-title').textContent = 'Editar Meta';
+        document.getElementById('delete-goal-btn').style.display = 'block';
+        
+        // Abre o modal
+        document.getElementById('goal-modal').classList.add('active');
+    }
+
+    // Função para renderizar metas com botão de edição
+    function renderGoals() {
+        const goalsList = document.getElementById('goals-list');
+        goalsList.innerHTML = '';
+        
         state.goals.forEach(goal => {
             const progress = (goal.current / goal.target) * 100;
-            const item = document.createElement('div');
-            item.className = 'goal-item';
-            item.innerHTML = `
+            const goalEl = document.createElement('div');
+            goalEl.className = 'goal-card';
+            goalEl.innerHTML = `
                 <div class="goal-info">
-                    <p>${goal.name}</p>
-                    <span>${Math.round(progress)}%</span>
+                    <h4>${goal.name}</h4>
+                    <p>Meta: R$ ${goal.target.toFixed(2)}</p>
+                    <p>Atual: R$ ${goal.current.toFixed(2)}</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${progress}%"></div>
+                    </div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: ${progress > 100 ? 100 : progress}%;"></div>
-                </div>
-                <div class="goal-values">
-                    <span>${formatCurrency(goal.current)}</span>
-                    <span>${formatCurrency(goal.target)}</span>
-                </div>
+                <button class="edit-goal-btn" onclick="editGoal('${goal.id}')">
+                    <span class="material-icons-sharp">edit</span>
+                </button>
             `;
-            goalsListEl.appendChild(item);
+            goalsList.appendChild(goalEl);
         });
+    }
+
+    // Atualizar o event listener do formulário de metas
+    document.getElementById('goal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const goalId = document.getElementById('goal-id').value;
+        const goalData = {
+            name: document.getElementById('goal-name').value,
+            target: parseFloat(document.getElementById('goal-target').value),
+            current: parseFloat(document.getElementById('goal-current').value)
+        };
+
+        if (goalId) {
+            // Atualizar meta existente
+            const index = state.goals.findIndex(g => g.id === goalId);
+            if (index !== -1) {
+                state.goals[index] = { ...state.goals[index], ...goalData };
+            }
+        } else {
+            // Criar nova meta
+            state.goals.push({
+                id: Date.now().toString(),
+                ...goalData
+            });
+        }
+
+        // Salvar, atualizar interface e fechar modal
+        saveAndRerender();
+        closeModal(goalModal);
+    });
+
+    // Adicionar listener para deletar meta
+    document.getElementById('delete-goal-btn').addEventListener('click', function() {
+        const goalId = document.getElementById('goal-id').value;
+        if (confirm('Tem certeza que deseja excluir esta meta?')) {
+            state.goals = state.goals.filter(g => g.id !== goalId);
+            saveAndRerender();
+            closeModal(goalModal);
+        }
+    });
+
+    function closeGoalModal() {
+        document.getElementById('goal-modal').classList.remove('active');
+        document.getElementById('goal-form').reset();
+        document.getElementById('goal-id').value = '';
+        document.getElementById('goal-modal-title').textContent = 'Nova Meta Financeira';
+        document.getElementById('delete-goal-btn').style.display = 'none';
     }
 
     function updateUserUI() {
