@@ -53,7 +53,7 @@ export function createExpenseChart() {
 
 export function updateExpenseChart(transactions, categories) {
     if (!expenseChart) return;
-    
+
     const expenseData = categories.map(category => {
         return transactions
             .filter(t => t.type === 'expense' && t.category === category)
@@ -61,16 +61,15 @@ export function updateExpenseChart(transactions, categories) {
     });
 
     const hasData = expenseData.some(d => d > 0);
+    const chartContainer = expenseChart.canvas.closest('.chart-container');
 
     if (hasData) {
         expenseChart.data.labels = categories;
         expenseChart.data.datasets[0].data = expenseData;
-        expenseChart.canvas.parentNode.style.display = 'block';
+        chartContainer.style.display = 'block';
     } else {
-        // Hide chart if no expense data for the month
-        expenseChart.canvas.parentNode.style.display = 'none';
+        chartContainer.style.display = 'none';
     }
-    
+
     expenseChart.update();
 }
-
