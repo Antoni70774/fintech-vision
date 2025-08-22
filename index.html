@@ -92,8 +92,21 @@
                 </div>
                 <div class="bank-connect">
                     <h4>Conexão Bancária</h4>
-                    <p>Conecte suas contas para sincronizar transações automaticamente.</p>
-                    <button class="btn-disabled" disabled>Conectar (Em Breve)</button>
+                    <p>Selecione seu banco para conectar:</p>
+                    <div class="bank-integration">
+                        <button class="bank-button" onclick="connectBank('nubank')">
+                            <img src="assets/nubank-icon.png" alt="Nubank">
+                            Nubank
+                        </button>
+                        <button class="bank-button" onclick="connectBank('itau')">
+                            <img src="assets/itau-icon.png" alt="Itaú">
+                            Itaú
+                        </button>
+                        <button class="bank-button" onclick="connectBank('caixa')">
+                            <img src="assets/caixa-icon.png" alt="Caixa">
+                            Caixa
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -157,24 +170,27 @@
     <!-- Add Goal Modal -->
     <div id="goal-modal" class="modal-overlay">
         <div class="modal-content">
-            <form id="goal-form">
+            <form id="goal-form" onsubmit="handleGoalSubmit(event)">
                 <h3 id="goal-modal-title">Nova Meta Financeira</h3>
                 
                 <input type="hidden" id="goal-id">
                 
                 <label for="goal-name">Nome da Meta</label>
-                <input type="text" id="goal-name" placeholder="Ex: Viagem para a Europa" required>
+                <input type="text" id="goal-name" required>
 
                 <label for="goal-target">Valor Alvo</label>
-                <input type="number" id="goal-target" placeholder="R$ 10.000,00" step="0.01" required>
+                <input type="number" id="goal-target" step="0.01" required>
 
                 <label for="goal-current">Valor Atual</label>
-                <input type="number" id="goal-current" placeholder="R$ 500,00" step="0.01" required>
+                <input type="number" id="goal-current" step="0.01" required>
+
+                <label for="goal-date">Data Limite</label>
+                <input type="date" id="goal-date" required>
 
                 <div class="modal-actions">
-                    <button type="button" id="cancel-goal-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn-primary">Salvar Meta</button>
-                    <button type="button" id="delete-goal-btn" class="btn-danger" style="display: none;">Excluir</button>
+                    <button type="button" class="btn-secondary" onclick="closeGoalModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="button" id="delete-goal-btn" class="btn-danger" onclick="deleteGoal()">Excluir</button>
                 </div>
             </form>
         </div>
