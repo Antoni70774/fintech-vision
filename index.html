@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -26,9 +27,13 @@
             <div id="dashboard-page" class="page active">
                 <div class="summary-card">
                     <div class="date-selector">
-                        <span id="prev-month" class="material-icons-sharp">chevron_left</span>
+                        <button id="prev-month" class="icon-btn" aria-label="Mês anterior">
+                            <span class="material-icons-sharp">chevron_left</span>
+                        </button>
                         <h2 id="current-month-year"></h2>
-                        <span id="next-month" class="material-icons-sharp">chevron_right</span>
+                        <button id="next-month" class="icon-btn" aria-label="Próximo mês">
+                            <span class="material-icons-sharp">chevron_right</span>
+                        </button>
                     </div>
                     <div class="balance-info">
                         <p>Balanço do Mês</p>
@@ -43,7 +48,7 @@
                             </div>
                         </div>
                         <div class="expense">
-                             <span class="material-icons-sharp down">arrow_downward</span>
+                            <span class="material-icons-sharp down">arrow_downward</span>
                             <div>
                                 <p>Despesas</p>
                                 <h4 id="month-expense">R$ 0,00</h4>
@@ -59,21 +64,17 @@
 
                 <div class="recent-transactions">
                     <h3>Transações Recentes</h3>
-                    <ul id="transaction-list">
-                        <!-- Transactions will be injected here by JS -->
-                    </ul>
+                    <ul id="transaction-list"></ul>
                 </div>
             </div>
 
             <!-- Goals Page -->
             <div id="goals-page" class="page">
-                 <div class="goals-header">
+                <div class="goals-header">
                     <h3>Metas Pessoais</h3>
                     <button id="add-goal-btn" class="btn-primary">Nova Meta</button>
                 </div>
-                <div id="goals-list">
-                    <!-- Goals will be injected here by JS -->
-                </div>
+                <div id="goals-list"></div>
             </div>
 
             <!-- Profile Page -->
@@ -84,8 +85,8 @@
                     <div class="user-switcher">
                         <p>Trocar de usuário:</p>
                         <div class="user-buttons">
-                           <button class="btn-secondary" data-user="Esposo">Esposo</button>
-                           <button class="btn-secondary" data-user="Esposa">Esposa</button>
+                            <button class="btn-secondary" data-user="Esposo">Esposo</button>
+                            <button class="btn-secondary" data-user="Esposa">Esposa</button>
                         </div>
                     </div>
                     <button id="export-data-btn" class="btn-secondary">Exportar Dados</button>
@@ -109,11 +110,10 @@
                     </div>
                 </div>
             </div>
-
         </main>
 
         <!-- Floating Action Button -->
-        <button id="add-transaction-btn" class="fab">
+        <button id="add-transaction-btn" class="fab" style="bottom: 20px; right: 20px;">
             <span class="material-icons-sharp">add</span>
         </button>
 
@@ -146,15 +146,13 @@
                 <input type="hidden" id="transaction-type" value="expense">
                 
                 <label for="amount">Valor</label>
-                <input type="number" id="amount" placeholder="R$ 0,00" step="0.01" required>
+                <input type="number" id="amount" placeholder="R$ 0,00" step="0.01" min="0" required>
 
                 <label for="description">Descrição</label>
                 <input type="text" id="description" placeholder="Ex: Almoço" required>
                 
                 <label for="category">Categoria</label>
-                <select id="category" required>
-                    <!-- Options will be populated by JS -->
-                </select>
+                <select id="category" required></select>
 
                 <label for="date">Data</label>
                 <input type="date" id="date" required>
@@ -167,32 +165,26 @@
         </div>
     </div>
     
-    <!-- Correção do formulário de meta -->
+    <!-- Goal Modal -->
     <div id="goal-modal" class="modal-overlay">
         <div class="modal-content">
             <form id="goal-form">
                 <h3 id="goal-modal-title">Nova Meta Financeira</h3>
-                
                 <input type="hidden" id="goal-id">
-                
                 <label for="goal-name">Nome da Meta</label>
                 <input type="text" id="goal-name" required>
-
                 <label for="goal-target">Valor Alvo</label>
-                <input type="number" id="goal-target" step="0.01" required>
-
+                <input type="number" id="goal-target" step="0.01" min="0" required>
                 <label for="goal-current">Valor Atual</label>
-                <input type="number" id="goal-current" step="0.01" required>
-
+                <input type="number" id="goal-current" step="0.01" min="0" required>
                 <div class="modal-actions">
-                    <button type="button" onclick="closeGoalModal()" class="btn-secondary">Cancelar</button>
+                    <button type="button" id="cancel-goal-btn" class="btn-secondary">Cancelar</button>
                     <button type="submit" class="btn-primary">Salvar</button>
                     <button type="button" id="delete-goal-btn" class="btn-danger" style="display:none">Excluir</button>
                 </div>
             </form>
         </div>
     </div>
-
 
     <script type="module" src="app.js"></script>
     <script>
