@@ -100,28 +100,32 @@ document.addEventListener('DOMContentLoaded', () => {
         typeIncomeBtn.classList.toggle('active', type === 'income');
         updateCategoryOptions(type);
     }
-    
-    function updateCategoryOptions(type) {
-        const categories = type === 'expense' ? state.expenseCategories : state.incomeCategories;
-        categorySelect.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
-    }
 
+    // Corrigido o formulário de transação
     transactionForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const formData = new FormData(e.target);
         const newTransaction = {
-            id: Date.now(),
+            id: Date.now().toString(),
             user: state.currentUser,
             type: transactionTypeInput.value,
-            amount: parseFloat(document.getElementById('amount').value),
-            description: document.getElementById('description').value,
-            category: document.getElementById('category').value,
-            date: document.getElementById('date').value,
+            amount: parseFloat(formData.get('amount')),
+            description: formData.get('description'),
+            category: formData.get('category'),
+            date: formData.get('date'),
         };
+        
+        if (!newTransaction.amount || !newTransaction.description || !newTransaction.date) {
+            alert('Por favor, preencha todos os campos');
+            return;
+        }
+
         state.transactions.push(newTransaction);
         saveAndRerender();
         closeModal(transactionModal);
+        e.target.reset();
     });
-    
+
     // GOAL FORM
     goalForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -207,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('month-balance').style.color = balance >= 0 ? 'var(--text-light)' : '#ff8a80';
     }
 
+    // Corrigido renderização de transações com data
     function renderTransactionList(transactions) {
         const listEl = document.getElementById('transaction-list');
         listEl.innerHTML = '';
@@ -217,10 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const sorted = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        sorted.slice(0, 10).forEach(t => { // Show max 10 recent
+        sorted.slice(0, 10).forEach(t => {
             const item = document.createElement('li');
             item.className = 'transaction-item';
             const isIncome = t.type === 'income';
+            const date = new Date(t.date).toLocaleDateString('pt-BR');
             
             item.innerHTML = `
                 <div class="transaction-icon ${isIncome ? 'income' : 'expense'}">
@@ -228,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="transaction-details">
                     <p>${t.description}</p>
-                    <span>${t.category} &bull; ${t.user}</span>
+                    <span>${t.category} • ${t.user} • ${date}</span>
                 </div>
                 <div class="transaction-amount ${isIncome ? 'income' : 'expense'}">
                     ${isIncome ? '+' : '-'} ${formatCurrency(t.amount)}
@@ -237,80 +243,38 @@ document.addEventListener('DOMContentLoaded', () => {
             listEl.appendChild(item);
         });
     }
-    
-    function editGoal(goalId) {
-        const goal = state.goals.find(g => g.id === goalId);
-        if (!goal) return;
 
-        // Preenche o modal com os dados da meta
-        document.getElementById('goal-id').value = goal.id;
-        document.getElementById('goal-name').value = goal.name;
-        document.getElementById('goal-target').value = goal.target;
-        document.getElementById('goal-current').value = goal.current;
-        
-        // Atualiza título e mostra botão de deletar
-        document.getElementById('goal-modal-title').textContent = 'Editar Meta';
-        document.getElementById('delete-goal-btn').style.display = 'block';
-        
-        // Abre o modal
-        document.getElementById('goal-modal').classList.add('active');
-    }
-
-    // Função para renderizar metas com botão de edição
-    function renderGoals() {
-        const goalsList = document.getElementById('goals-list');
-        goalsList.innerHTML = '';
-        
-        state.goals.forEach(goal => {
-            const progress = (goal.current / goal.target) * 100;
-            const goalEl = document.createElement('div');
-            goalEl.className = 'goal-card';
-            goalEl.innerHTML = `
-                <div class="goal-info">
-                    <h4>${goal.name}</h4>
-                    <p>Meta: R$ ${goal.target.toFixed(2)}</p>
-                    <p>Atual: R$ ${goal.current.toFixed(2)}</p>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: ${progress}%"></div>
-                    </div>
-                </div>
-                <button class="edit-goal-btn" onclick="editGoal('${goal.id}')">
-                    <span class="material-icons-sharp">edit</span>
-                </button>
-            `;
-            goalsList.appendChild(goalEl);
-        });
-    }
-
-    // Atualizar o event listener do formulário de metas
-    document.getElementById('goal-form').addEventListener('submit', function(e) {
+    // Corrigido sistema de metas
+    function handleGoalSubmit(e) {
         e.preventDefault();
-        
         const goalId = document.getElementById('goal-id').value;
         const goalData = {
             name: document.getElementById('goal-name').value,
             target: parseFloat(document.getElementById('goal-target').value),
-            current: parseFloat(document.getElementById('goal-current').value)
+            current: parseFloat(document.getElementById('goal-current').value),
+            date: document.getElementById('goal-date').value
         };
 
+        if (!goalData.name || !goalData.target || isNaN(goalData.current)) {
+            alert('Por favor, preencha todos os campos corretamente');
+            return;
+        }
+
         if (goalId) {
-            // Atualizar meta existente
             const index = state.goals.findIndex(g => g.id === goalId);
             if (index !== -1) {
                 state.goals[index] = { ...state.goals[index], ...goalData };
             }
         } else {
-            // Criar nova meta
             state.goals.push({
                 id: Date.now().toString(),
                 ...goalData
             });
         }
 
-        // Salvar, atualizar interface e fechar modal
         saveAndRerender();
-        closeModal(goalModal);
-    });
+        closeGoalModal();
+    }
 
     // Adicionar listener para deletar meta
     document.getElementById('delete-goal-btn').addEventListener('click', function() {
@@ -348,6 +312,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('ServiceWorker registration failed: ', err);
                     });
             });
+        }
+    }
+
+    // Adicionado sistema de conexão bancária
+    async function connectBank(bankName) {
+        try {
+            const bankConfig = {
+                nubank: 'https://api.nubank.com.br',
+                itau: 'https://api.itau.com.br',
+                caixa: 'https://api.caixa.gov.br'
+            };
+
+            const response = await fetch(`${bankConfig[bankName]}/oauth`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    client_id: 'seu_client_id',
+                    redirect_uri: window.location.origin + '/callback'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Falha na conexão');
+            }
+
+            alert(`Conexão com ${bankName} iniciada. Aguarde redirecionamento.`);
+        } catch (error) {
+            alert(`No momento não é possível conectar ao ${bankName}. Tente novamente mais tarde.`);
+            console.error('Erro na conexão:', error);
         }
     }
 });
