@@ -56,19 +56,21 @@ document.addEventListener('DOMContentLoaded', () => {
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            const pageId = item.dataset.page;
+            const pageId = item.getAttribute('data-page');
             
-            pages.forEach(page => page.classList.remove('active'));
+            // Remove classe active de todas as páginas
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Ativa a página selecionada
             document.getElementById(pageId).classList.add('active');
-
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
             
-            document.querySelector('.app-header h1').textContent = {
-                'dashboard-page': 'Visão Geral',
-                'goals-page': 'Metas Pessoais',
-                'profile-page': 'Perfil'
-            }[pageId];
+            // Atualiza navegação
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            item.classList.add('active');
         });
     });
 
@@ -77,10 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal(modal) { modal.classList.remove('active'); }
 
     addTransactionBtn.addEventListener('click', () => {
-        transactionForm.reset();
+        const modal = document.getElementById('transaction-modal');
+        modal.classList.add('active');
+        document.getElementById('transaction-form').reset();
         setCurrentDate();
-        updateCategoryOptions('expense');
-        openModal(transactionModal);
     });
     cancelBtn.addEventListener('click', () => closeModal(transactionModal));
 
@@ -104,68 +106,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Correção do formulário de transação
     transactionForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const amount = document.getElementById('amount').value;
-        const description = document.getElementById('description').value;
-        const category = document.getElementById('category').value;
-        const date = document.getElementById('date').value;
         
-        if (!amount || !description || !category || !date) {
-            alert('Por favor, preencha todos os campos');
-            return;
-        }
-
-        const newTransaction = {
+        const transaction = {
             id: Date.now().toString(),
-            user: state.currentUser,
-            type: transactionTypeInput.value,
-            amount: parseFloat(amount),
-            description: description,
-            category: category,
-            date: date
+            type: document.getElementById('transaction-type').value,
+            amount: parseFloat(document.getElementById('amount').value),
+            description: document.getElementById('description').value,
+            category: document.getElementById('category').value,
+            date: document.getElementById('date').value,
+            user: state.currentUser
         };
 
-        state.transactions.push(newTransaction);
+        state.transactions.push(transaction);
         saveAndRerender();
-        closeModal(transactionModal);
+        document.getElementById('transaction-modal').classList.remove('active');
         this.reset();
     });
 
     // GOAL FORM
     goalForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const goalId = document.getElementById('goal-id').value;
-        const name = document.getElementById('goal-name').value;
-        const target = document.getElementById('goal-target').value;
-        const current = document.getElementById('goal-current').value;
         
-        if (!name || !target || !current) {
-            alert('Por favor, preencha todos os campos');
-            return;
-        }
-
-        const goalData = {
-            name: name,
-            target: parseFloat(target),
-            current: parseFloat(current)
+        const goal = {
+            id: document.getElementById('goal-id').value || Date.now().toString(),
+            name: document.getElementById('goal-name').value,
+            target: parseFloat(document.getElementById('goal-target').value),
+            current: parseFloat(document.getElementById('goal-current').value)
         };
 
-        if (goalId) {
-            const index = state.goals.findIndex(g => g.id === goalId);
+        if (document.getElementById('goal-id').value) {
+            const index = state.goals.findIndex(g => g.id === goal.id);
             if (index !== -1) {
-                state.goals[index] = { ...state.goals[index], ...goalData };
+                state.goals[index] = goal;
             }
         } else {
-            state.goals.push({
-                id: Date.now().toString(),
-                ...goalData
-            });
+            state.goals.push(goal);
         }
 
         saveAndRerender();
         closeGoalModal();
     });
 
-    // Correção da função de edição de meta
+    // Função global para editar meta
     window.editGoal = function(goalId) {
         const goal = state.goals.find(g => g.id === goalId);
         if (!goal) return;
@@ -177,18 +159,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('goal-modal-title').textContent = 'Editar Meta';
         document.getElementById('delete-goal-btn').style.display = 'block';
-        
-        openModal(goalModal);
+        document.getElementById('goal-modal').classList.add('active');
     };
 
-    // Correção da função de fechar modal de meta
-    function closeGoalModal() {
-        closeModal(goalModal);
-        goalForm.reset();
+    // Função global para fechar modal de meta
+    window.closeGoalModal = function() {
+        document.getElementById('goal-modal').classList.remove('active');
+        document.getElementById('goal-form').reset();
         document.getElementById('goal-id').value = '';
         document.getElementById('goal-modal-title').textContent = 'Nova Meta Financeira';
         document.getElementById('delete-goal-btn').style.display = 'none';
-    }
+    };
 
     // USER MANAGEMENT
     userButtons.forEach(button => {
